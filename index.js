@@ -121,9 +121,11 @@ async function sendLoginEmail(email, url) {
   const urlWithPath = `${url}/webconf?token=${encodeURIComponent(token)}`;
   const html = `
       Voici votre lien pour accéder à la webconférence de l'Etat. Celui-ci est valable 1 heure :<br>
+      <br>
       <a href="${urlWithPath}">${urlWithPath}</a><br>
       <br>
-      L'équipe beta.gouv.fr, contacter nous sur webconf@beta.gouv.fr`;
+      L'équipe BetaGouv<br>
+      Contactez-nous sur <a href="mailto:${config.senderEmail}">${config.senderEmail}</a>`;
 
   try {
     await sendMail(email, 'Connexion Webconf BetaGouv', html);
