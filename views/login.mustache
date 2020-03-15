@@ -1,0 +1,18 @@
+{{> header}}
+<h1>Accès à webconf.numerique.gouv.fr</h1>
+{{#errors}}
+<p style="color: red; font-weight: bold">{{errors}}<p>
+{{/errors}}
+{{#message}}
+<p>{{message}}</p>
+{{/message}}
+{{^message}}
+<form action="/login" method="POST">
+  <p><label><b>Saisir votre email :</b><br><input name="email"></label><br>
+  <button>Connexion avec mon email.</button>
+  <br>(Un email sera envoyé à votre adresse avec un lien d'accès)
+  <br><br><b>Ce service permet de créer une <a href="https://webconf.numerique.gouv.fr/" target="_blank">webconférence de l'Etat</a> en dehors du Réseau Interministériel de l'Etat (RIE). Seules les adresses autorisées ont accès à ce service. Si votre adresse n'est pas autorisée, merci de faire une demande à <a href="mailto:webconf@beta.gouv.fr">webconf@beta.gouv.fr</a>.</b>
+  </p>
+</form>
+{{/message}}
+{{> footer}}
