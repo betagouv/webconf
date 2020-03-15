@@ -120,9 +120,10 @@ async function sendLoginEmail(email, url) {
   const token = jwt.sign({ email: email }, config.secret, { expiresIn: '1 hours' });
   const urlWithPath = `${url}/webconf?token=${encodeURIComponent(token)}`;
   const html = `
-      <h1>Votre lien de connexion ! (Valable 1 heure)</h1>
-      <a href="${urlWithPath}">${urlWithPath}
-      </a>`;
+      Voici votre lien pour accéder à la webconférence de l'Etat. Celui-ci est valable 1 heure :<br>
+      <a href="${urlWithPath}">${urlWithPath}</a><br>
+      <br>
+      L'équipe beta.gouv.fr, contacter nous sur webconf@beta.gouv.fr`;
 
   try {
     await sendMail(email, 'Connexion Webconf BetaGouv', html);
