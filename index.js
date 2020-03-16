@@ -86,10 +86,12 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
-    req.flash(
-      'error',
-      "Vous n'étes pas identifié pour accèder à cette page (ou votre accès n'est plus valide)"
-    );
+    if(req.path !== "/") {
+      req.flash(
+        'error',
+        "Vous n'étes pas identifié pour accèder à cette page (ou votre accès n'est plus valide)"
+      );
+    }
 
     return res.redirect('/login');
   }
