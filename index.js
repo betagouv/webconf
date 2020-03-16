@@ -17,17 +17,34 @@ const config = {
   authorizedDomains: (process.env.AUTHORIZED_DOMAINS || "beta.gouv.fr,modernisation.gouv.fr").toLowerCase().split(","),
   authorizedEmails: (process.env.AUTHORIZED_EMAILS || "john@example.com,antoine@michon.tech").toLowerCase().split(","),
   secure: (process.env.SECURE || 'true') === 'true',
-  senderEmail: process.env.MAIL_SENDER || "webconf@beta.gouv.fr"
+  senderEmail: process.env.MAIL_SENDER || "webconf@beta.gouv.fr",
+  webconfToken: process.env.WEBCONF_TOKEN,
+  webconfURL : "https://webconf.numerique.gouv.fr",
+  confNamePrefix: process.env.CONFNAME_PREFIX || "WebConf",
 };
 
-const mailTransport = nodemailer.createTransport({
-  debug: process.env.MAIL_DEBUG || false,
-  service: process.env.MAIL_SERVICE,
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS
-  }
-});
+var mailTransport;
+if(process.env.MAIL_SERVICE !== undefined) {
+  mailTransport = nodemailer.createTransport({
+    debug: process.env.MAIL_DEBUG || false,
+    service: process.env.MAIL_SERVICE,
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS
+    }
+  });
+} else {
+  mailTransport = nodemailer.createTransport({
+    debug: process.env.MAIL_DEBUG || false,
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    secure: process.env.MAIL_SECURE,
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS
+    }
+  });
+}
 
 const app = express();
 
@@ -54,9 +71,10 @@ app.use(
 );
 
 // Save a token in cookie that expire after 7 days if user is logged
+/*
 app.use((req, res, next) => {
-  if (req.user && req.user.id) {
-    const token = jwt.sign({ id: req.user.id }, config.secret, {
+  if (req.user && req.user.email) {
+    const token = jwt.sign({ email: req.user.email }, config.secret, {
       expiresIn: '7 days'
     });
 
@@ -64,7 +82,7 @@ app.use((req, res, next) => {
   }
 
   next();
-});
+});*/
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
@@ -117,12 +135,18 @@ async function sendMail(to_email, subject, html, text) {
 }
 
 async function sendLoginEmail(email, url) {
-  const token = jwt.sign({ email: email }, config.secret, { expiresIn: '1 hours' });
-  const urlWithPath = `${url}/webconf?token=${encodeURIComponent(token)}`;
+  const token = jwt.sign({ email: email }, config.secret, { expiresIn: '24 hours' });
+  const confName = `${config.confNamePrefix}${Math.floor(Math.random() * 899999)+100000}`;
+  const appUrlWithPath = `${url}/webconf/${confName}?token=${encodeURIComponent(token)}`;
+  const webconfURL = `${config.webconfURL}/${confName}`;
   const html = `
-      Voici votre lien pour accéder à la webconférence de l'Etat. Celui-ci est valable 1 heure :<br>
+      Voici le lien pour créer un salon de WebConférence de l'Etat. Ce lien est <b>personnel</b> et est valable 24 heures :<br>
       <br>
-      <a href="${urlWithPath}">${urlWithPath}</a><br>
+      <a href="${appUrlWithPath}">${appUrlWithPath}</a><br>
+      <br>
+      Voici le lien à diffuser aux participants de votre webconférence :<br>
+      <br>
+      <a href="${webconfURL}">${webconfURL}</a><br>
       <br>
       L'équipe BetaGouv<br>
       Contactez-nous sur <a href="mailto:${config.senderEmail}">${config.senderEmail}</a>`;
@@ -132,12 +156,12 @@ async function sendLoginEmail(email, url) {
   } catch (err) {
     console.error(err);
 
-    throw new Error("Erreur d'envoi de mail à ton adresse");
+    throw new Error("Erreur d'envoi de mail à votre adresse");
   }
 }
 
-app.get('/webconf', (req, res) => {
-  return res.redirect('https://webconf.numerique.gouv.fr');
+app.get('/webconf/:confname', (req, res) => {
+  return res.redirect(`${config.webconfURL}/${confname}?jwt=${config.webconfToken}`);
 });
 
 app.get('/login', async (req, res) => {

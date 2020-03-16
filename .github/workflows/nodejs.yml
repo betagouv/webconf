@@ -26,3 +26,4 @@ jobs:
         MAIL_PASS: fakepass
         MAIL_SERVICE: debug
         MAIL_USER: fakeuser
+        WEBCONF_TOKEN: faketoken

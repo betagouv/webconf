@@ -5,6 +5,7 @@
 - Variables d'environnement nécessaires :
    - AUTHORIZED_DOMAINS
    - AUTHORIZED_EMAILS
+   - WEBCONF_TOKEN
    - SESSION_SECRET (clé de 32 caractère aléatoires, important en prod)
    - MAIL_SERVICE (service géré par nodemailer, `mailjet` est dispo)
    - MAIL_USER
