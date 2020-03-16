@@ -141,11 +141,9 @@ async function sendLoginEmail(email, url) {
   const webconfURL = `${config.webconfURL}/${confName}`;
   const html = `
       Voici le lien pour créer un salon de WebConférence de l'Etat. Ce lien est <b>personnel</b> et est valable 24 heures :<br>
-      <br>
       <a href="${appUrlWithPath}">${appUrlWithPath}</a><br>
       <br>
       Voici le lien à diffuser aux participants de votre webconférence :<br>
-      <br>
       <a href="${webconfURL}">${webconfURL}</a><br>
       <br>
       L'équipe BetaGouv<br>
@@ -160,8 +158,8 @@ async function sendLoginEmail(email, url) {
   }
 }
 
-app.get('/webconf/:confname', (req, res) => {
-  return res.redirect(`${config.webconfURL}/${confname}?jwt=${config.webconfToken}`);
+app.get('/webconf/:confName', (req, res) => {
+  return res.redirect(`${config.webconfURL}/${req.params.confName}?jwt=${config.webconfToken}`);
 });
 
 app.get('/login', async (req, res) => {
