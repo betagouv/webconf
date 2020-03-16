@@ -1,4 +1,19 @@
-</div>
-{{#user}}<a href="/logout">Déconnexion</a></p>{{/user}}
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__logo">
+        <ul class="footer__social">
+             <li><a href="mailto:webconf@beta.gouv.fr" title="Nous écrire un mail"><svg class="icon icon-mail"><use xlink:href="#envelope"></use></svg></a></li>
+        </ul>
+      </div>
+      <ul class="footer__links">
+        <li><h2>webconf.beta.gouv.fr</h2></li>
+        <li><a href="https://beta.gouv.fr" target="_blank">beta.gouv.fr</a></li>   
+         {{#user}}<li><a href="/logout">Déconnexion</a></li>{{/user}}
+      </ul>
+      <ul class="footer__links"></ul>
+    </div>
+  </footer>
 </body>
+
 </html>
