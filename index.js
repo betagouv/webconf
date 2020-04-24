@@ -16,7 +16,7 @@ const config = {
   port: process.env.PORT || 8100,
   authorizedDomains: (process.env.AUTHORIZED_DOMAINS || "beta.gouv.fr").toLowerCase().split(","),
   authorizedEmails: (process.env.AUTHORIZED_EMAILS || "john@example.com,antoine@michon.tech").toLowerCase().split(","),
-  authorizedRooDomains: (process.env.AUTHORIZED_ROOTDOMAINS || "gouv.fr").toLowerCase().split(","),
+  authorizedRootDomains: (process.env.AUTHORIZED_ROOTDOMAINS || "gouv.fr").toLowerCase().split(","),
   secure: (process.env.SECURE || 'true') === 'true',
   senderEmail: process.env.MAIL_SENDER || "webconf@beta.gouv.fr",
   webconfToken: process.env.WEBCONF_TOKEN,
@@ -184,7 +184,7 @@ app.post('/login', async (req, res) => {
   console.log(`Check if ${domain} is authorized`);
   if(!config.authorizedDomains.includes(domain) && 
      !config.authorizedEmails.includes(email) && 
-     !config.authorizedRooDomains.includes(root_domain) ) {
+     !config.authorizedRootDomains.includes(root_domain) ) {
     req.flash('error', 'Votre email n\'est pas autorisé');
     return res.redirect('/login');
   }
