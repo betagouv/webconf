@@ -180,7 +180,7 @@ app.post('/login', async (req, res) => {
   }
   
   const domain = email.split("@")[1].toLowerCase();
-  const root_domain = domain.split(".").slice(-2).join();
+  const root_domain = domain.split(".").slice(-2).join('.');
   console.log(`Check if ${domain} is authorized`);
   if(!config.authorizedDomains.includes(domain) && 
      !config.authorizedEmails.includes(email) && 
